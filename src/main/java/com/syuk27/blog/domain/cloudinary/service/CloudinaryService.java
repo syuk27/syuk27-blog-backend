@@ -27,6 +27,7 @@ public class CloudinaryService {
 		response.put("timestamp", timestamp);
 		response.put("signature", signature);
 		response.put("api_key", this.cloudinary.config.apiKey);
+		response.put("cloudName", this.cloudinary.config.cloudName);
 		
 		return response;
 	}
