@@ -38,6 +38,7 @@ public class SecurityConfiguration {
 
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/admin/**").denyAll() // 특정 URI는 차단
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers("/api/cloudinary/signature").permitAll()
 						.anyRequest().authenticated() // OPTIONS 요청 허용, 나머지 차단 
 				)
 				.httpBasic(Customizer.withDefaults()) // HTTP 기본 인증 활성화
