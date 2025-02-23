@@ -24,7 +24,7 @@ public class UserPostBlock {
 	private String content;
 	
 	@ManyToOne
-	@JoinColumn(name="post_id")
+	@JoinColumn(name="post_id", nullable = false)
 	private UserPost userPost;
 	
 	public UserPostBlock() {}
@@ -34,5 +34,33 @@ public class UserPostBlock {
 		this.id = id;
 		this.cloud_img_url = cloud_img_url;
 		this.content = content;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getCloud_img_url() {
+		return cloud_img_url;
+	}
+
+	public void setCloud_img_url(String cloud_img_url) {
+		this.cloud_img_url = cloud_img_url;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public UserPost getUserPost() {
+		return userPost;
+	}
+
+	public void setUserPost(UserPost userPost) {
+		this.userPost = userPost;
 	}
 }
