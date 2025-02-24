@@ -20,7 +20,6 @@ import com.syuk27.blog.domain.userpost.service.UserPostService;
 @RequestMapping("/user_posts")
 public class UserPostController {
 	private final UserPostService userPostService;
-	
 	private final UserPostBlockService userPostBlockService;
 	
 	public UserPostController(
@@ -31,12 +30,12 @@ public class UserPostController {
 		this.userPostBlockService = userPostBlockService;
 	}
 	
-	@PostMapping("/save")
+	@PostMapping("/")
 	public ResponseEntity<UserPost> createUserPost(@RequestBody UserPost userPost) {
 		return ResponseEntity.ok(userPostService.createUserPost(userPost));
 	}
 	
-	@GetMapping("/find/posts/{userId}")
+	@GetMapping("/{userId}")
 	public ResponseEntity<List<UserPost>> getAllUserPost(@PathVariable Long userId) {
 		return ResponseEntity.ok(userPostService.getUserPostList(userId));
 	}

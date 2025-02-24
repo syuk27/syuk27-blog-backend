@@ -22,7 +22,7 @@ public class UserPost {
 	private Long id;
 	
 	@OneToMany(mappedBy="userPost", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<UserPostBlock> UserPostBlockList;
+	private List<UserPostBlock> userPostBlockList;
 	
 	@ManyToOne(fetch = FetchType.LAZY) //참조하는 엔티티를 실제로 사용할 때 로딩 => 성능 최적화
 	@JoinColumn(name="user_id", nullable = false) // Foreign Key 설정 조인은 기본 id 찾아서 함
@@ -30,9 +30,8 @@ public class UserPost {
 	
 	public UserPost() {}
 	
-	public UserPost(Long id, User user) {
+	public UserPost(User user) {
 		super();
-		this.id = id;
 		this.user = user;
 	}
 
@@ -41,11 +40,11 @@ public class UserPost {
 	}
 
 	public List<UserPostBlock> getUserPostBlockList() {
-		return UserPostBlockList;
+		return userPostBlockList;
 	}
 
 	public void setUserPostBlockList(List<UserPostBlock> userPostBlockList) {
-		UserPostBlockList = userPostBlockList;
+		this.userPostBlockList = userPostBlockList;
 	}
 
 	public User getUser() {
@@ -55,4 +54,9 @@ public class UserPost {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public void addUserPostBlock(UserPostBlock block) {
+        this.userPostBlockList.add(block);
+        block.setUserPost(this);
+    }
 }

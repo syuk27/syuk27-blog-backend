@@ -29,9 +29,8 @@ public class UserPostBlock {
 	
 	public UserPostBlock() {}
 
-	public UserPostBlock(Long id, String cloud_img_url, String content) {
+	public UserPostBlock(String cloud_img_url, String content) {
 		super();
-		this.id = id;
 		this.cloud_img_url = cloud_img_url;
 		this.content = content;
 	}
