@@ -1,11 +1,11 @@
 package com.syuk27.blog.domain.userpost.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.syuk27.blog.domain.userpost.model.UserPost;
+import com.syuk27.blog.domain.userpost.model.UserPostBlock;
 import com.syuk27.blog.domain.userpost.repository.UserPostRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,9 +20,16 @@ private final UserPostRepository userPostRepository;
 	}
 	
 	public UserPost createUserPost(UserPost userPost) {
-		if(userPost.getId() == null) {
-			throw new RuntimeException("createUserPost not exists id: " + userPost.getId());
-		}
+//		if(userPost.getId() == null) {
+//			throw new RuntimeException("createUserPost not exists id: " + userPost.getId());
+//		}
+		
+//		if(userPost.getUserPostBlockList() != null && !userPost.getUserPostBlockList().isEmpty()) {
+//			for(UserPostBlock userPostBlock : userPost.getUserPostBlockList()) {
+//				userPost.addUserPostBlock(userPostBlock);
+//			}
+//		}
+		
 		
 		return userPostRepository.save(userPost);
 	}

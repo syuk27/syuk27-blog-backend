@@ -43,12 +43,11 @@ public class User {
 	//기본 생성자 추가 (Hibernate 필요)
 	public User() {}
 	
-	public User(Long id) {
-		super();
-		this.id = id;
+//	public User() {
+//		super();
 //		this.name = name;
 //		this.birthDate = birthDate;
-	}
+//	}
 
 	public Long getId() {
 		return id;
