@@ -1,11 +1,13 @@
 package com.syuk27.blog.domain.userpost.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.syuk27.blog.domain.userpost.model.UserPost;
-import com.syuk27.blog.domain.userpost.model.UserPostBlock;
+import com.syuk27.blog.domain.userpost.model.UserPostDto;
+import com.syuk27.blog.domain.userpost.repository.UserPostBlockRepository;
 import com.syuk27.blog.domain.userpost.repository.UserPostRepository;
 
 import jakarta.transaction.Transactional;
@@ -14,24 +16,35 @@ import jakarta.transaction.Transactional;
 public class UserPostService {
 	
 private final UserPostRepository userPostRepository;
+private final UserPostBlockRepository userPostBlockRepository;
 	
-	public UserPostService(UserPostRepository userPostRepository) {
+	public UserPostService(UserPostRepository userPostRepository, UserPostBlockRepository userPostBlockRepository) {
 		this.userPostRepository = userPostRepository;
+		this.userPostBlockRepository = userPostBlockRepository;
 	}
 	
-	public UserPost createUserPost(UserPost userPost) {
-//		if(userPost.getId() == null) {
-//			throw new RuntimeException("createUserPost not exists id: " + userPost.getId());
-//		}
-		
+//	@Transactional
+//	public UserPost createUserPost(UserPost userPost) {
+//		UserPost savedUserPost = userPostRepository.save(userPost);
+//		
 //		if(userPost.getUserPostBlockList() != null && !userPost.getUserPostBlockList().isEmpty()) {
 //			for(UserPostBlock userPostBlock : userPost.getUserPostBlockList()) {
-//				userPost.addUserPostBlock(userPostBlock);
+//				userPostBlock.setUserPost(savedUserPost);
+//				userPostBlockRepository.save(userPostBlock);
 //			}
 //		}
+//		
+//		return savedUserPost;
+//	}
+	
+	@Transactional
+	public UserPostDto createUserPost(UserPost userPost) {
+		Optional.ofNullable(userPost.getUserPostBlockList())
+				.ifPresent(blocks -> blocks.forEach(block -> block.setUserPost(userPost)));
 		
-		
-		return userPostRepository.save(userPost);
+		// forEach는 isEmpty() 체크 필요없음 -> 빈 리스트일 경우 동작 안함
+		// 순환 참조(무한 루프) 해결 dto 사용
+		return new UserPostDto(userPostRepository.save(userPost));
 	}
 	
 	public List<UserPost> getUserPostList(Long userId) {

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syuk27.blog.domain.userpost.model.UserPost;
-import com.syuk27.blog.domain.userpost.service.UserPostBlockService;
+import com.syuk27.blog.domain.userpost.model.UserPostDto;
 import com.syuk27.blog.domain.userpost.service.UserPostService;
 
 
@@ -20,18 +20,13 @@ import com.syuk27.blog.domain.userpost.service.UserPostService;
 @RequestMapping("/user_posts")
 public class UserPostController {
 	private final UserPostService userPostService;
-	private final UserPostBlockService userPostBlockService;
 	
-	public UserPostController(
-			UserPostService userPostService, 
-			UserPostBlockService userPostBlockService
-	) {
+	public UserPostController(UserPostService userPostService) {
 		this.userPostService = userPostService;
-		this.userPostBlockService = userPostBlockService;
 	}
 	
-	@PostMapping("/")
-	public ResponseEntity<UserPost> createUserPost(@RequestBody UserPost userPost) {
+	@PostMapping("")
+	public ResponseEntity<UserPostDto> createUserPost(@RequestBody UserPost userPost) {
 		return ResponseEntity.ok(userPostService.createUserPost(userPost));
 	}
 	
@@ -39,5 +34,4 @@ public class UserPostController {
 	public ResponseEntity<List<UserPost>> getAllUserPost(@PathVariable Long userId) {
 		return ResponseEntity.ok(userPostService.getUserPostList(userId));
 	}
-	
 }
