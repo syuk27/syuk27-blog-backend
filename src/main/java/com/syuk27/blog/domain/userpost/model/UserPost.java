@@ -2,6 +2,7 @@ package com.syuk27.blog.domain.userpost.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syuk27.blog.domain.user.model.User;
 
 import jakarta.persistence.CascadeType;
@@ -54,9 +55,4 @@ public class UserPost {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	public void addUserPostBlock(UserPostBlock block) {
-        this.userPostBlockList.add(block);
-        block.setUserPost(this);
-    }
 }

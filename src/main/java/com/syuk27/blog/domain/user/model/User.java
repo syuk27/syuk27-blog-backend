@@ -2,6 +2,7 @@ package com.syuk27.blog.domain.user.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syuk27.blog.domain.userpost.model.UserPost;
 
 import jakarta.persistence.CascadeType;
@@ -37,7 +38,10 @@ public class User {
 	//CascadeType.REMOVE → 부모를 삭제하면 자식도 삭제
 	//orphanRemoval = true → 부모가 자식과의 관계를 끊으면 자식이 자동 삭제됨
 	//1:N, 부모가 없으면 자식도 없어야 하는 경우, 부모에서 자식을 제거하면, 자식도 자동 삭제되어야 하는 경우
-	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+	//cascade = CascadeType.ALL => 부모가 저장/삭제될 때, 자식도 함께 저장/삭제됨.
+	//@JsonIgnore //JSON 직렬화/역직렬화 시 필드가 제외되므로 API 요청 시 리스트가 자동으로 포함되지 않음 
+	@OneToMany(mappedBy="user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@JsonIgnore
 	private List<UserPost> userPostList;
 	
 	//기본 생성자 추가 (Hibernate 필요)
