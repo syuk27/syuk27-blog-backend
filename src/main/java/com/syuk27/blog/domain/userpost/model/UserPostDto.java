@@ -24,6 +24,10 @@ public class UserPostDto {
 		return userPostBlockList;
 	}
 
+	public void setUserPostBlockList(List<UserPostBlockDto> userPostBlockList) {
+		this.userPostBlockList = userPostBlockList;
+	}
+
 	public static class UserPostBlockDto {
 		private Long id;
 		
