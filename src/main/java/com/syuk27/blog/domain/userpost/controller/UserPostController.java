@@ -31,7 +31,7 @@ public class UserPostController {
 	}
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<List<UserPost>> getAllUserPost(@PathVariable Long userId) {
+	public ResponseEntity<List<UserPostDto>> getAllUserPost(@PathVariable Long userId) {
 		return ResponseEntity.ok(userPostService.getUserPostList(userId));
 	}
 }

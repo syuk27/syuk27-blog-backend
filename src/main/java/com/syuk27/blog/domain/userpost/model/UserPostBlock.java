@@ -2,6 +2,7 @@ package com.syuk27.blog.domain.userpost.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +23,9 @@ public class UserPostBlock {
 	
 	@Lob
 	private String content;
+	
+	@JsonProperty("blockOrder")
+	private Integer block_order;
 	
 	@ManyToOne
 	@JoinColumn(name="post_id", nullable = false)
