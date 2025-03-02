@@ -1,18 +1,26 @@
 package com.syuk27.blog.domain.user.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syuk27.blog.domain.userpost.model.UserPost;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
 	//jakarta.validation.constraints => 유효성 검증 
@@ -32,6 +40,13 @@ public class User {
 	private LocalDate birthDate;
 	*/
 	
+	@CreatedDate //생성 시간 자동 저장
+	@Column(updatable = false) // 생성된 후 변경 불가
+	private LocalDateTime createDate;
+	
+	@LastModifiedDate
+	private LocalDateTime updateDate;
+	
 	//jpa에서 일대다(1:N) 관계를 설정할 때 사용, User (1) <-> Post (N), ex) 한 명의 유저(User)는 여러 개의 게시글(Post)을 가질 수 있음
 	//{참조 테이블명}_{PK 필드명} 형식으로 외래 키(Foreign Key)를 자동 생성
 	//@JoinColumn(name = "외래키_이름") 사용하여 외래 키 이름 변경 가능 => @ManyToOne에서 사용 (외래키 설정이 필요한곳)
@@ -46,15 +61,36 @@ public class User {
 	
 	//기본 생성자 추가 (Hibernate 필요)
 	public User() {}
+
 	
 //	public User() {
 //		super();
 //		this.name = name;
 //		this.birthDate = birthDate;
 //	}
-
+	
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
+	public LocalDateTime getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(LocalDateTime updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public List<UserPost> getUserPostList() {
@@ -64,5 +100,5 @@ public class User {
 	public void setUserPostList(List<UserPost> userPostList) {
 		this.userPostList = userPostList;
 	}
-	
+
 }

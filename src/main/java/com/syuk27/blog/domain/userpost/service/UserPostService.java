@@ -3,6 +3,8 @@ package com.syuk27.blog.domain.userpost.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.syuk27.blog.domain.userpost.model.UserPost;
@@ -35,10 +37,9 @@ public class UserPostService {
 		return new UserPostDto(userPostRepository.save(userPost));
 	}
 
-	public List<UserPostDto> getUserPostList(Long userId) {
-
-		List<UserPostDto> userPostList = userPostRepository.findByUserId(userId);
-
+	public Page<UserPostDto> getUserPostList(Long userId, Pageable pageable) {
+		Page<UserPostDto> userPostList = userPostRepository.findByUserId(userId, pageable);
+		
 		Optional.ofNullable(userPostList).ifPresent(userPosts -> userPosts.forEach(userPost -> {
 			List<UserPostBlockDto> userPostBlockList = userPostBlockRepository.findByPostId(userPost.getId());
 			userPost.setUserPostBlockList(userPostBlockList);
