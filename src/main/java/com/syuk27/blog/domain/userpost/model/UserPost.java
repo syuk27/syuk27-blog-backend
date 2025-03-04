@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -49,43 +51,4 @@ public class UserPost {
 	@JoinColumn(name="user_id", nullable = false) // Foreign Key 설정 조인은 기본 id 찾아서 함
 	private User user;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(LocalDateTime createDate) {
-		this.createDate = createDate;
-	}
-
-	public LocalDateTime getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(LocalDateTime updateDate) {
-		this.updateDate = updateDate;
-	}
-
-	public List<UserPostBlock> getUserPostBlockList() {
-		return userPostBlockList;
-	}
-
-	public void setUserPostBlockList(List<UserPostBlock> userPostBlockList) {
-		this.userPostBlockList = userPostBlockList;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 }
