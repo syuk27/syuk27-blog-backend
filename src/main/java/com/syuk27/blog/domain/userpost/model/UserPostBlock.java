@@ -1,8 +1,11 @@
 package com.syuk27.blog.domain.userpost.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
+import java.util.List;
 
-import jakarta.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.syuk27.blog.domain.user.model.User;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,8 +13,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserPostBlock {
 
 	@Id
@@ -30,40 +41,4 @@ public class UserPostBlock {
 	@ManyToOne
 	@JoinColumn(name="post_id", nullable = false)
 	private UserPost userPost;
-	
-	public UserPostBlock() {}
-
-	public UserPostBlock(String cloud_img_url, String content) {
-		super();
-		this.cloud_img_url = cloud_img_url;
-		this.content = content;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getCloud_img_url() {
-		return cloud_img_url;
-	}
-
-	public void setCloud_img_url(String cloud_img_url) {
-		this.cloud_img_url = cloud_img_url;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public UserPost getUserPost() {
-		return userPost;
-	}
-
-	public void setUserPost(UserPost userPost) {
-		this.userPost = userPost;
-	}
 }
