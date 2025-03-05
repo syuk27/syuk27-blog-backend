@@ -1,7 +1,10 @@
 package com.syuk27.blog.domain.user.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -39,8 +42,8 @@ public class User {
 	// jakarta.validation.constraints => 유효성 검증
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // DB에서 AUTO_INCREMENT를 사용하여 ID 자동 증가
-	private Long id;
+//	@GeneratedValue(strategy = GenerationType.IDENTITY) // DB에서 AUTO_INCREMENT를 사용하여 ID 자동 증가
+	private String id;
 
 	/**
 	 * @Size(min = 2, message = "이름은 2글자 이상이어야 합니다.")
@@ -64,6 +67,7 @@ public class User {
 	private String password;
 	
 	@Column(nullable = false)
+	@JsonIgnore
 	private String role;
 
 	@CreatedDate // 생성 시간 자동 저장
@@ -99,8 +103,19 @@ public class User {
 	
 	@PrePersist
 	public void prePersist() {
+		if(this.id == null) {
+			this.id = generateUserId();
+		}
+		
 		if(this.role == null) {
 			this.role = "USER";
 		}
+	}
+	
+	private String generateUserId() {
+		String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		int randomValue = new Random().nextInt(10000); // 0~ 9999
+		String extraRandomStr = String.format("%04d", randomValue);
+		return timestamp + "_" + UUID.randomUUID().toString().substring(0, 8) + "_" + extraRandomStr;
 	}
 }
