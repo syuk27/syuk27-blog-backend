@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -43,7 +44,13 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableWebSecurity	// 3.x 이상 생략 가능하지만 가독성을 위해 추가하는 것이 좋음
 @EnableMethodSecurity  // 메서드 보안을 활성화해야 @PreAuthorize, @Secured 사용 가능
 public class SecurityConfig {
+	
+	private final String authUrl;
 
+	SecurityConfig(@Value("${app.auth.url}") String authUrl) {
+		this.authUrl = authUrl;
+	}
+	
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, HandlerMappingIntrospector introspector) throws Exception {
         
@@ -51,9 +58,21 @@ public class SecurityConfig {
         return httpSecurity
         		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                    //Spring Security는 설정된 순서대로 규칙을 적용
+                	
+                	// get만 허용
+            		.requestMatchers(HttpMethod.GET,"/**").permitAll()
+
+            		// 관리자 페이지
+//                	.requestMatchers(HttpMethod.GET, "/admin/posts/**").permitAll()
                 	.requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/authenticate").permitAll()
-                    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                	
+                	// 로그인 전 허용 페이지 모든 http
+                    .requestMatchers("/authenticate/**").permitAll()
+                    
+                    // 로그인 후 허용 페이지 모든 http
+                    .requestMatchers("/test/**").authenticated()
+                    
                     .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
@@ -71,7 +90,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("${app.auth.url}")); // 특정 주소만 허용
+		configuration.setAllowedOrigins(List.of(this.authUrl)); // 특정 주소만 허용
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드 설정
 		configuration.setAllowedHeaders(List.of("*")); // 모든 요청 헤더 허용
 		configuration.setAllowCredentials(true); // 쿠키와 같은 인증 정보 허용 여부
