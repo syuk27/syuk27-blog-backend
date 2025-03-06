@@ -1,10 +1,6 @@
-package com.syuk27.blog.domain.userpost.model;
-
-import java.time.LocalDateTime;
-import java.util.List;
+package com.syuk27.blog.domain.post.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.syuk27.blog.domain.user.model.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserPostBlock {
+public class PostBlock {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +36,5 @@ public class UserPostBlock {
 	
 	@ManyToOne
 	@JoinColumn(name="post_id", nullable = false)
-	private UserPost userPost;
+	private Post post;
 }

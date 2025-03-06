@@ -1,4 +1,4 @@
-package com.syuk27.blog.domain.userpost.controller;
+package com.syuk27.blog.domain.post.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,31 +12,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.syuk27.blog.domain.userpost.model.UserPost;
-import com.syuk27.blog.domain.userpost.model.UserPostDto;
-import com.syuk27.blog.domain.userpost.service.UserPostService;
+import com.syuk27.blog.domain.post.model.Post;
+import com.syuk27.blog.domain.post.model.PostDto;
+import com.syuk27.blog.domain.post.service.PostService;
 
 
 
 @RestController
 @RequestMapping("/admin/posts")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("!(#httpMethod == 'GET') or hasRole('ADMIN')")
 public class AdminPostController {
-	private final UserPostService userPostService;
+	private final PostService postService;
 	
-	public AdminPostController(UserPostService userPostService) {
-		this.userPostService = userPostService;
+	public AdminPostController(PostService postService) {
+		this.postService = postService;
 	}
 	
 	@PostMapping("")
-	public ResponseEntity<UserPostDto> createUserPost(@RequestBody UserPost userPost) {
-		return ResponseEntity.ok(userPostService.createUserPost(userPost));
+	public ResponseEntity<PostDto> createPost(@RequestBody Post post) {
+		return ResponseEntity.ok(postService.createPost(post));
 	}
 	
-	@GetMapping("/{userId}/{page}")
-	public ResponseEntity<Page<UserPostDto>> getAllUserPost(@PathVariable Long userId, @PathVariable Integer page) {
+	@GetMapping("/{page}")
+	public ResponseEntity<Page<PostDto>> getAllPost(@PathVariable Integer page) {
 //		page는 0 부터 시작
 		Pageable pageable = PageRequest.of(page - 1, 12);
-		return ResponseEntity.ok(userPostService.getUserPostList(userId, pageable));
+		return ResponseEntity.ok(postService.getPostList(pageable));
 	}
 }
