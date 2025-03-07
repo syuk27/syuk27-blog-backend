@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.syuk27.blog.domain.user.model.User;
+import com.syuk27.blog.domain.user.model.UserRequestDto;
 import com.syuk27.blog.domain.user.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -21,12 +24,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity<User> registerUser(@RequestBody User user) {
+	public ResponseEntity<User> registerUser(@Valid @RequestBody UserRequestDto user) {
 		return ResponseEntity.ok().body(userService.registerUser(user));
 	}
 	
 	@PostMapping("/change_password")
-	public ResponseEntity<User> changePassword(@RequestBody User user) {
+	public ResponseEntity<User> changePassword(@Valid @RequestBody UserRequestDto user) {
 		return ResponseEntity.ok().body(userService.registerUser(user));
 	}
 	

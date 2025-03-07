@@ -68,7 +68,7 @@ public class SecurityConfig {
                 	.requestMatchers("/admin/**").hasRole("ADMIN")
                 	
                 	// 로그인 전 허용 페이지 모든 http
-                    .requestMatchers("/authenticate/**").permitAll()
+                    .requestMatchers("/authenticate/**", "/auth/register/**").permitAll()
                     
                     // 로그인 후 허용 페이지 모든 http
                     .requestMatchers("/test/**").authenticated()

@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.syuk27.blog.domain.user.model.User;
+import com.syuk27.blog.domain.user.model.UserRequestDto;
 import com.syuk27.blog.domain.user.repository.UserRepository;
 
 @Service
@@ -18,29 +19,38 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
-	public User registerUser(User user) {
-		if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+	public User registerUser(UserRequestDto userRequestDto) {
+		if(userRepository.findByNickname(userRequestDto.getNickname()).isPresent()) {
 			throw new RuntimeException("USEREXCEPTION02");
 		}
 		
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
+		if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
+			throw new RuntimeException("USEREXCEPTION02");
+		}
+		
+		String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
+		
+		User user = new User();
+		user.setNickname(userRequestDto.getNickname());
+		user.setEmail(userRequestDto.getEmail());
 		user.setPassword(encodedPassword);
 		
 		return userRepository.save(user);
 	}
 	
-	public User changePassword(User user) {
-		Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+	public User changePassword(UserRequestDto userRequestDto) {
+		Optional<User> userOptional = userRepository.findByEmail(userRequestDto.getEmail());
 		
 		if(!userOptional.isPresent()) {
 			throw new RuntimeException("USEREXCEPTION01");
 		}
 		
-		if(passwordEncoder.matches(user.getPassword(), userOptional.get().getPassword())) {
+		if(passwordEncoder.matches(userRequestDto.getPassword(), userOptional.get().getPassword())) {
 			throw new RuntimeException("USEREXCEPTION03");
 		}
 		
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		User user = new User();
+		user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
 		return userRepository.save(user);
 	}
 	
