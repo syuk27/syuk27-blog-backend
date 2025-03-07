@@ -1,19 +1,13 @@
 package com.syuk27.blog.domain.post.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import com.syuk27.blog.domain.common.model.BaseEntity;
 import com.syuk27.blog.domain.user.model.User;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,8 +29,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,13 +44,6 @@ public class Post {
 	
 	@Column(nullable = false)
 	private Integer category_id;
-	
-	@CreatedDate //생성 시간 자동 저장
-	@Column(updatable = false) // 생성된 후 변경 불가
-	private LocalDateTime createDate;
-	
-	@LastModifiedDate
-	private LocalDateTime updateDate;
 	
 	@OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<PostBlock> postBlockList;

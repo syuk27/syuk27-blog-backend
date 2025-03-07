@@ -6,24 +6,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.syuk27.blog.domain.common.model.BaseEntity;
 import com.syuk27.blog.domain.post.model.Post;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,8 +26,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor // 기본 생성자
 @AllArgsConstructor // 모든 필드 초기화하는 생성자
-@EntityListeners(AuditingEntityListener.class) // 엔티티 리스너 연결 자동으로 createdAt, updatedAt을 관리
-public class User {
+public class User extends BaseEntity {
 
 	// jakarta.validation.constraints => 유효성 검증
 
@@ -52,28 +43,19 @@ public class User {
 	 * @Past(message = "생일은 현재보다 과거의 날짜이어야 합니다.") //현재보다 과거 private LocalDate
 	 *               birthDate;
 	 */
+	
+	@Column(unique = true, nullable = false, length = 10)
+	private String nickname;
 
-	@Email(message = "유효한 이메일 주소를 입력하세요.")
-	@NotBlank(message = "이메일을 입력해주세요.")
-	@Column(unique = true, nullable = false, updatable = false)
+	@Column(unique = true, nullable = false, updatable = false, length = 30)
 	private String email;
 
-	@NotBlank(message = "비밀번호를 입력해주세요.")
-	@Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
-	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "비밀번호는 최소 1개의 문자, 숫자, 특수문자를 포함해야 합니다.")
 	@JsonIgnore
 	private String password;
 	
 	@Column(nullable = false)
 	@JsonIgnore
 	private String role;
-
-	@CreatedDate // 생성 시간 자동 저장
-	@Column(updatable = false) // 생성된 후 변경 불가
-	private LocalDateTime createDate;
-
-	@LastModifiedDate
-	private LocalDateTime updateDate;
 
 	// jpa에서 일대다(1:N) 관계를 설정할 때 사용, User (1) <-> Post (N), ex) 한 명의 유저(User)는 여러 개의
 	// 게시글(Post)을 가질 수 있음
