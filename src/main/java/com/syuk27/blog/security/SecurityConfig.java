@@ -46,9 +46,11 @@ import com.nimbusds.jose.proc.SecurityContext;
 public class SecurityConfig {
 	
 	private final String authUrl;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-	SecurityConfig(@Value("${app.auth.url}") String authUrl) {
+	SecurityConfig(@Value("${app.auth.url}") String authUrl, JwtAuthenticationFilter jwtAuthenticationFilter) {
 		this.authUrl = authUrl;
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 	}
 	
     @Bean
@@ -84,6 +86,7 @@ public class SecurityConfig {
         		) //OAuth2 리소스 서버 설정 => JWT, JWTConverter 사용
                 .httpBasic(Customizer.withDefaults()) //기본 HTTP Basic 인증 활성화
                 .headers(header -> header.frameOptions().sameOrigin()) //X-Frame-Options 설정 동일 출처에서만 <iframe>을 허용.
+                .addFilter(jwtAuthenticationFilter)
                 .build();
     }
     
