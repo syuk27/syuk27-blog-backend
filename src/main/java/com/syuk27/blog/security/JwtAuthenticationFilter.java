@@ -1,8 +1,8 @@
 package com.syuk27.blog.security;
 
 import java.io.IOException;
-import java.util.Optional;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
+@Lazy
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtDecoder jwtDecoder;
