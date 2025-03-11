@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -29,6 +30,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,7 +50,7 @@ public class SecurityConfig {
 	private final String authUrl;
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-	SecurityConfig(@Value("${app.auth.url}") String authUrl, JwtAuthenticationFilter jwtAuthenticationFilter) {
+	public SecurityConfig(@Value("${app.auth.url}") String authUrl, @Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
 		this.authUrl = authUrl;
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 	}
@@ -70,7 +72,7 @@ public class SecurityConfig {
                 	.requestMatchers("/admin/**").hasRole("ADMIN")
                 	
                 	// 로그인 전 허용 페이지 모든 http
-                    .requestMatchers("/authenticate/**", "/auth/register/**").permitAll()
+                    .requestMatchers("/authenticate/**", "/user/create/**").permitAll()
                     
                     // 로그인 후 허용 페이지 모든 http
                     .requestMatchers("/test/**").authenticated()
@@ -86,7 +88,7 @@ public class SecurityConfig {
         		) //OAuth2 리소스 서버 설정 => JWT, JWTConverter 사용
                 .httpBasic(Customizer.withDefaults()) //기본 HTTP Basic 인증 활성화
                 .headers(header -> header.frameOptions().sameOrigin()) //X-Frame-Options 설정 동일 출처에서만 <iframe>을 허용.
-                .addFilter(jwtAuthenticationFilter)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     

@@ -19,7 +19,7 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
-	public User registerUser(UserRequestDto userRequestDto) {
+	public User createUser(UserRequestDto userRequestDto) {
 		if(userRepository.findByNickname(userRequestDto.getNickname()).isPresent()) {
 			throw new RuntimeException("USEREXCEPTION02");
 		}
@@ -38,7 +38,11 @@ public class UserService {
 		return userRepository.save(user);
 	}
 	
-	public User changePassword(UserRequestDto userRequestDto) {
+	public Optional<User> getUser(String userEmail) {
+		return userRepository.findByEmail(userEmail);
+	}
+	
+	public User updatePassword(UserRequestDto userRequestDto) {
 		Optional<User> userOptional = userRepository.findByEmail(userRequestDto.getEmail());
 		
 		if(!userOptional.isPresent()) {
