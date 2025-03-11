@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.syuk27.blog.domain.exceptin.CustomException;
+import com.syuk27.blog.domain.exceptin.ErrorType;
 import com.syuk27.blog.domain.user.model.User;
 import com.syuk27.blog.domain.user.model.UserRequestDto;
 import com.syuk27.blog.domain.user.repository.UserRepository;
@@ -21,11 +23,11 @@ public class UserService {
 	
 	public User createUser(UserRequestDto userRequestDto) {
 		if(userRepository.findByNickname(userRequestDto.getNickname()).isPresent()) {
-			throw new RuntimeException("USEREXCEPTION02");
+			throw new CustomException(ErrorType.USER_EX02.getHttpStatus(), ErrorType.USER_EX02.getMessage(userRequestDto.getNickname()));
 		}
 		
 		if(userRepository.findByEmail(userRequestDto.getEmail()).isPresent()) {
-			throw new RuntimeException("USEREXCEPTION02");
+			throw new CustomException(ErrorType.USER_EX03.getHttpStatus(), ErrorType.USER_EX03.getMessage(userRequestDto.getEmail()));
 		}
 		
 		String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
@@ -46,11 +48,11 @@ public class UserService {
 		Optional<User> userOptional = userRepository.findByEmail(userRequestDto.getEmail());
 		
 		if(!userOptional.isPresent()) {
-			throw new RuntimeException("USEREXCEPTION01");
+			throw new CustomException(ErrorType.USER_EX01.getHttpStatus(), ErrorType.USER_EX01.getMessage());
 		}
 		
 		if(passwordEncoder.matches(userRequestDto.getPassword(), userOptional.get().getPassword())) {
-			throw new RuntimeException("USEREXCEPTION03");
+			throw new CustomException(ErrorType.USER_EX04.getHttpStatus(), ErrorType.USER_EX04.getMessage());
 		}
 		
 		User user = new User();
@@ -61,7 +63,7 @@ public class UserService {
 	public User deleteUser(User user) {
 		Optional<User> userOptional = userRepository.findByEmailAndPassword(user.getEmail(), user.getPassword());
 		if(!userOptional.isPresent()) {
-			throw new RuntimeException("USEREXCEPTION01");
+			throw new CustomException(ErrorType.USER_EX01.getHttpStatus(), ErrorType.USER_EX01.getMessage());
 		}
 		
 		userRepository.deleteById(userOptional.get().getId());
