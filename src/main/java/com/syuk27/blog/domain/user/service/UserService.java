@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.syuk27.blog.domain.exceptin.CustomException;
-import com.syuk27.blog.domain.exceptin.ErrorType;
 import com.syuk27.blog.domain.user.model.User;
 import com.syuk27.blog.domain.user.model.UserRequestDto;
 import com.syuk27.blog.domain.user.repository.UserRepository;
+import com.syuk27.blog.exceptin.CustomException;
+import com.syuk27.blog.exceptin.ErrorType;
 
 @Service
 public class UserService {

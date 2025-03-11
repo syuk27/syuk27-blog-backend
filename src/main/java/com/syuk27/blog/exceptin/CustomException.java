@@ -1,4 +1,4 @@
-package com.syuk27.blog.domain.exceptin;
+package com.syuk27.blog.exceptin;
 
 import org.springframework.http.HttpStatus;
 

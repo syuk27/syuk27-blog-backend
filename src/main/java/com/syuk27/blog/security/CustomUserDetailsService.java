@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import com.syuk27.blog.domain.exceptin.CustomException;
-import com.syuk27.blog.domain.exceptin.ErrorType;
 import com.syuk27.blog.domain.user.model.User;
 import com.syuk27.blog.domain.user.model.UserRole;
 import com.syuk27.blog.domain.user.repository.UserRepository;
+import com.syuk27.blog.exceptin.CustomException;
+import com.syuk27.blog.exceptin.ErrorType;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
