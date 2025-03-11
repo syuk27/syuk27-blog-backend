@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.syuk27.blog.domain.exceptin.CustomException;
+import com.syuk27.blog.domain.exceptin.ErrorType;
 import com.syuk27.blog.domain.user.model.User;
 import com.syuk27.blog.domain.user.model.UserRole;
 import com.syuk27.blog.domain.user.repository.UserRepository;
@@ -22,10 +23,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 	
 	@Override
-	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userEmail) throws CustomException {
 		
 		User user = userRepository.findByEmail(userEmail)
-				.orElseThrow(() -> new UsernameNotFoundException("USEREXCEPTION01"));
+				.orElseThrow(() -> new CustomException(ErrorType.USER_EX01.getHttpStatus(), ErrorType.USER_EX01.getMessage()));
 		
 		String role = UserRole.USER.getValue();
 		if(user.getRole().toLowerCase().contains("admin")) {
