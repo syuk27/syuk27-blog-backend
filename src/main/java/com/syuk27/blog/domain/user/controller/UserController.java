@@ -2,9 +2,12 @@ package com.syuk27.blog.domain.user.controller;
 
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +37,18 @@ public class UserController {
 	}
 	
 	@GetMapping("/get")
-	public ResponseEntity<Optional<User>> getUser(@AuthenticationPrincipal UserDetails userDetails) {
-		String userEmail = userDetails.getUsername();
+	public ResponseEntity<Optional<User>> getUser() {
 		
-		Optional<User> user = Optional.ofNullable(userEmail).filter(email -> !email.isEmpty())
-				.flatMap(userService::getUser);
-		return ResponseEntity.ok().body(user);
+		Object principal = SecurityContextHolder.getContext().getAuthentication();
+		if(principal instanceof JwtAuthenticationToken jwtAuth) {
+			String userEmail = jwtAuth.getToken().getClaim("sub");
+			Optional<User> user = Optional.ofNullable(userEmail).filter(email -> !email.isEmpty())
+					.flatMap(userService::getUser);
+			
+			return ResponseEntity.ok().body(user);
+		}
+		
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 	
 	@PostMapping("/update_password")
