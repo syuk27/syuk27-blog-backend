@@ -16,17 +16,16 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class JwtTokenService {
-    
+
+	private final long EXPIRATION_TIME = 90;
     private final JwtEncoder jwtEncoder;
 
     public JwtTokenService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public void generateToken(HttpServletResponse response, Authentication authentication) {
+    public String generateToken(HttpServletResponse response, Authentication authentication) {
 
-    	int expires = 90;
-    	
     	// 사용자의 권한을 Scope로 변환
         var scope = authentication
                         .getAuthorities()
@@ -38,24 +37,26 @@ public class JwtTokenService {
         var claims = JwtClaimsSet.builder()
                         .issuer("self") //발급자
                         .issuedAt(Instant.now()) //발급 시간
-                        .expiresAt(Instant.now().plus(Long.valueOf(expires), ChronoUnit.MINUTES)) // 90분 후 만료
+                        .expiresAt(Instant.now().plus(EXPIRATION_TIME, ChronoUnit.MINUTES)) // 90분 후 만료
                         .subject(authentication.getName()) //사용자 정보
                         .claim("scope", scope) // 사용자 역할 정보 포함
                         .build();
 
         // JWT 토근 생성
-		String token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-		
-		Cookie cookie = new Cookie("jwt", token);
+		return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+    
+    public void addJwtToCookie(HttpServletResponse response, String token) {
+    	Cookie cookie = new Cookie("jwt", token);
 		cookie.setHttpOnly(true); // javascript 접근 불가
 		cookie.setSecure(true); // https에서만 전송
 		cookie.setPath("/"); // 전체 도메인에서 사용 가능
-		cookie.setMaxAge(expires * 60); // 90분
+		cookie.setMaxAge((int) EXPIRATION_TIME * 60); // 90분
 		
 		response.addCookie(cookie);
     }
     
-    public void removeToken(HttpServletResponse response) {
+    public void removeJwtToCookie(HttpServletResponse response) {
     	Cookie cookie = new Cookie("jwt", null);
     	cookie.setHttpOnly(true);
     	cookie.setSecure(true);

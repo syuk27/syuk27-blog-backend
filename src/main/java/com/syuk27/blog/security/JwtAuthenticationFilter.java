@@ -1,6 +1,9 @@
 package com.syuk27.blog.security;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
@@ -24,9 +27,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtDecoder jwtDecoder;
+	private final JwtTokenService jwtTokenService;
 	
-	public JwtAuthenticationFilter(JwtDecoder jwtDecoder) {
+	public JwtAuthenticationFilter(JwtDecoder jwtDecoder, JwtTokenService jwtTokenService) {
 		this.jwtDecoder = jwtDecoder;
+		this.jwtTokenService = jwtTokenService;
 	}
 
 	@Override
@@ -55,7 +60,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 						username, null, authorities); // 시큐리티에서 찾는 권한
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 //				SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
-			} catch (Exception e) {
+				
+				Instant expiration = jwt.getExpiresAt();
+				Duration remainingTime = Duration.between(Instant.now(), expiration);
+				
+				if(remainingTime.toMinutes() < 30) {
+					// jwt token 새로 발행 및 쿠키 저장
+					String newToken = jwtTokenService.generateToken(response, authenticationToken);
+					jwtTokenService.addJwtToCookie(response, newToken);
+				}
+			} 
+			catch (Exception e) {
 				SecurityContextHolder.clearContext();
 			}
 		}

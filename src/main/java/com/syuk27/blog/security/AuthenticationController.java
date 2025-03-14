@@ -31,17 +31,22 @@ public class AuthenticationController {
 				jwtTokenRequest.email(),
 				jwtTokenRequest.password());
 
-		var authentication = authenticationManager.authenticate(authenticationToken);
+		//UsernamePasswordAuthenticationToken 클래스는 Authentication 인터페이스 구현 객체 => Authentication 타입으로 받을 수 있음
+		var authentication = authenticationManager.authenticate(authenticationToken); 
+		//authenticationManager => 인증 진행 CustomUserDetailsService에서 리턴한 비번과 비교 PasswordEncoder.matches(rawPassword, encodedPassword)
 
 		SecurityContextHolder.getContext().setAuthentication(authentication); // 인증 정보 저장
-		jwtTokenService.generateToken(response, authentication);
-
+		
+		//jwt token 및 쿠키 저장
+		String token = jwtTokenService.generateToken(response, authentication);
+		jwtTokenService.addJwtToCookie(response, token);
+		
 		return ResponseEntity.ok().build();
 	}
 	
 	@PostMapping("/logout")
 	public ResponseEntity<?> logout(HttpServletResponse response) {
-		jwtTokenService.removeToken(response);
+		jwtTokenService.removeJwtToCookie(response);
 		
 		return ResponseEntity.ok().build();
 	}
