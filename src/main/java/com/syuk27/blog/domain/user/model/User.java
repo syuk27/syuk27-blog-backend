@@ -54,7 +54,6 @@ public class User extends BaseEntity {
 	private String password;
 	
 	@Column(nullable = false)
-	@JsonIgnore
 	private String role;
 
 	// jpa에서 일대다(1:N) 관계를 설정할 때 사용, User (1) <-> Post (N), ex) 한 명의 유저(User)는 여러 개의

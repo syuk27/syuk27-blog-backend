@@ -1,12 +1,15 @@
 package com.syuk27.blog.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -44,7 +47,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if(token != null) {
 			try {
 				Jwt jwt = jwtDecoder.decode(token);
-				SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
+				String username = jwt.getClaim("sub");
+				String scope = jwt.getClaim("scope");
+				
+				List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(scope));
+				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+						username, null, authorities); // 시큐리티에서 찾는 권한
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//				SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(jwt));
 			} catch (Exception e) {
 				SecurityContextHolder.clearContext();
 			}
