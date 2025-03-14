@@ -13,7 +13,10 @@ import com.syuk27.blog.domain.user.repository.UserRepository;
 import com.syuk27.blog.exceptin.CustomException;
 import com.syuk27.blog.exceptin.ErrorType;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
@@ -35,6 +38,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 		
+		log.info("user email: {}, authorities: {}", user.getEmail(), authorities);
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
 	}
 }

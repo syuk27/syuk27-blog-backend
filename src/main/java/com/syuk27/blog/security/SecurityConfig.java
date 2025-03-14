@@ -61,6 +61,14 @@ public class SecurityConfig {
         // https://github.com/spring-projects/spring-security/issues/12310
         return httpSecurity
         		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        	    .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화 (JWT 기반 인증에서는 필요 없음)
+                .sessionManagement(session -> session.
+            		sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 관리 (JWT 사용 시 STATELESS로 설정)
+                )
+//        		.oauth2ResourceServer(oauth2 -> oauth2
+//                		.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+//        		) 
+        		//OAuth2 리소스 서버 설정 => JWT, JWTConverter 사용 Authorization 헤더에서 JWT를 읽어와 인증하는 방식 HttpOnly 쿠키 사용시 필요없음
                 .authorizeHttpRequests(auth -> auth
                     //Spring Security는 설정된 순서대로 규칙을 적용
                 	
@@ -75,20 +83,13 @@ public class SecurityConfig {
                     .requestMatchers("/authenticate/**", "/user/create/**").permitAll()
                     
                     // 로그인 후 허용 페이지 모든 http
-                    .requestMatchers("/test/**").authenticated()
+//                    .requestMatchers("/test/**").authenticated()
                     
                     .anyRequest().authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.
-                    sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션을 생성하지 않음
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                		.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-        		) //OAuth2 리소스 서버 설정 => JWT, JWTConverter 사용
-                .httpBasic(Customizer.withDefaults()) //기본 HTTP Basic 인증 활성화
+                .httpBasic(httpBasic -> httpBasic.disable()) // Customizer.withDefaults()기본 HTTP Basic 인증 활성화(로그인 알람창) => 사용 안함
                 .headers(header -> header.frameOptions().sameOrigin()) //X-Frame-Options 설정 동일 출처에서만 <iframe>을 허용.
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가 (기존 인증 필터 전에 실행)
                 .build();
     }
     
@@ -107,11 +108,11 @@ public class SecurityConfig {
 	}
     
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    public JwtAuthenticationConverter jwtAuthenticationConverter() { // httpOnly 쿠키에서 사용 안함
     	
     	JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
-    	converter.setAuthorityPrefix("ROLE_");
-    	converter.setAuthoritiesClaimName("scope");
+    	converter.setAuthorityPrefix("ROLE_"); //jwt에서 가져온 권한 앞에 "ROLE_" 추가
+    	converter.setAuthoritiesClaimName("scope"); //jwt scope 
 
     	JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
     	authenticationConverter.setJwtGrantedAuthoritiesConverter(converter);
@@ -174,5 +175,4 @@ public class SecurityConfig {
                     "Unable to generate an RSA Key Pair", e);
         }
     }
-    
 }

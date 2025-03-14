@@ -4,10 +4,8 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +38,8 @@ public class UserController {
 	public ResponseEntity<Optional<User>> getUser() {
 		
 		Object principal = SecurityContextHolder.getContext().getAuthentication();
-		if(principal instanceof JwtAuthenticationToken jwtAuth) {
-			String userEmail = jwtAuth.getToken().getClaim("sub");
+		if(principal instanceof UsernamePasswordAuthenticationToken authenticationToken) {
+			String userEmail = (String) authenticationToken.getPrincipal();
 			Optional<User> user = Optional.ofNullable(userEmail).filter(email -> !email.isEmpty())
 					.flatMap(userService::getUser);
 			
