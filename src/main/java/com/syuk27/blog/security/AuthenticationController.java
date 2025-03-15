@@ -35,8 +35,6 @@ public class AuthenticationController {
 		var authentication = authenticationManager.authenticate(authenticationToken); 
 		//authenticationManager => 인증 진행 CustomUserDetailsService에서 리턴한 비번과 비교 PasswordEncoder.matches(rawPassword, encodedPassword)
 
-		SecurityContextHolder.getContext().setAuthentication(authentication); // 인증 정보 저장
-		
 		//jwt token 및 쿠키 저장
 		String token = jwtTokenService.generateToken(response, authentication);
 		jwtTokenService.addJwtToCookie(response, token);

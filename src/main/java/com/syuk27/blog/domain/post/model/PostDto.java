@@ -8,16 +8,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PostDto {
 	private Long id;
 	
+	private String title;
+	
+	private String description;
+	
 	private List<PostBlockDto> postBlockList;
 	
 	public PostDto(Post post) {
 		this.id = post.getId();
+		this.title = post.getTitle();
+		this.description = post.getDescription();
 		this.postBlockList = post.getPostBlockList().stream().map(PostBlockDto::new)
 				.collect(Collectors.toList()); //PostBlockDTO::new == block -> new PostBlockDto(block)
 	}
 	
 	public Long getId() {
 		return id;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	public List<PostBlockDto> getPostBlockList() {
