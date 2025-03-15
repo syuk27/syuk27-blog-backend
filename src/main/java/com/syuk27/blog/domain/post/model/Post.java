@@ -36,7 +36,7 @@ public class Post extends BaseEntity {
 	private Long id;
 	
 	@NotBlank(message = "제목을 입력해주세요.")
-	@Size(min = 8, message = "제목은 최소 8자 이상이어야 합니다.")
+	@Size(min = 2, message = "제목은 최소 2자 이상이어야 합니다.")
 	private String title;
 	
 	@Lob
