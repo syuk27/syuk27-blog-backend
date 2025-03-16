@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.syuk27.blog.domain.common.model.BaseEntity;
 
-public class PostDto {
+public class PostDto extends BaseEntity {
 	private Long id;
 	
 	private String title;

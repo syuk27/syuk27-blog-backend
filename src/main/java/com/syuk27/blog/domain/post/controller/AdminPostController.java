@@ -1,5 +1,7 @@
 package com.syuk27.blog.domain.post.controller;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,5 +38,10 @@ public class AdminPostController {
 //		page는 0 부터 시작
 		Pageable pageable = PageRequest.of(page - 1, 12);
 		return ResponseEntity.ok(postService.getPostList(pageable));
+	}
+	
+	@GetMapping("/detail/{postId}")
+	public ResponseEntity<Optional<PostDto>> getPostByPostId(@PathVariable Long postId) {
+		return ResponseEntity.ok().body(postService.getPostById(postId));
 	}
 }

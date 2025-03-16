@@ -49,6 +49,15 @@ public class PostService {
 		return setPostBlockListForPosts(postList);
 	}
 	
+	public Optional<PostDto> getPostById(Long postId) {
+		Optional<PostDto> post = postRepository.findByPostId(postId);
+		post.ifPresent(tmpPost -> {
+			List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(postId);
+			tmpPost.setPostBlockList(postBlockList);
+		});
+		return post;
+	}
+	
 	private Page<PostDto> setPostBlockListForPosts(Page<PostDto> postList) {
 	    Optional.ofNullable(postList).ifPresent(posts -> posts.forEach(post -> {
 	        List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(post.getId());
@@ -56,7 +65,7 @@ public class PostService {
 	    }));
 	    return postList;
 	}
-
+	
 	@Transactional // 변경 감지하여 자동 업데이트, save() 생략 가능
 	public Post updatePost(Post post) {
 		if (post.getId() == null) {
