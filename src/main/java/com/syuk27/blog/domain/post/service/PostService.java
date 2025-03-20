@@ -51,18 +51,18 @@ public class PostService {
 	
 	public Optional<PostDto> getPostById(Long postId) {
 		Optional<PostDto> post = postRepository.findByPostId(postId);
-		post.ifPresent(tmpPost -> {
-			List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(postId);
-			tmpPost.setPostBlockList(postBlockList);
-		});
+//		post.ifPresent(tmpPost -> {
+//			List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(postId);
+//			tmpPost.setPostBlockList(postBlockList);
+//		});
 		return post;
 	}
 	
 	private Page<PostDto> setPostBlockListForPosts(Page<PostDto> postList) {
-	    Optional.ofNullable(postList).ifPresent(posts -> posts.forEach(post -> {
-	        List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(post.getId());
-	        post.setPostBlockList(postBlockList);
-	    }));
+//	    Optional.ofNullable(postList).ifPresent(posts -> posts.forEach(post -> {
+//	        List<PostBlockDto> postBlockList = postBlockRepository.findByPostId(post.getId());
+//	        post.setPostBlockList(postBlockList);
+//	    }));
 	    return postList;
 	}
 	
