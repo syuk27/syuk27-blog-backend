@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import com.syuk27.blog.env.EnvLoader;
 
-@SpringBootApplication
 @EnableJpaAuditing
+@SpringBootApplication
 public class BlogApplication {
 
 	public static void main(String[] args) {

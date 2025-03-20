@@ -32,7 +32,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 			""")
 		Page<PostDto> findAdminByRole(Pageable pageable);
 		
-		@Query("SELECT p FROM Post p WHERE p.id = :postId")
+//		@Query("SELECT p, u.nickname FROM Post p JOIN User u ON p.user.id = u.id WHERE p.id = :postId")
+		@Query("SELECT p FROM Post p JOIN FETCH p.user WHERE p.id = :postId")
 		Optional<PostDto> findByPostId(Long postId);
 		
 		//Spring Data JPA의 메서드 네이밍 전략(Method Query Creation)
