@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.syuk27.blog.domain.user.model.User;
 import com.syuk27.blog.domain.user.model.UserRequestDto;
 import com.syuk27.blog.domain.user.repository.UserRepository;
-import com.syuk27.blog.exceptin.CustomException;
-import com.syuk27.blog.exceptin.ErrorType;
+import com.syuk27.blog.exception.CustomException;
+import com.syuk27.blog.exception.ErrorType;
 
 @Service
 public class UserService {

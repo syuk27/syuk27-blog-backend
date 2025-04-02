@@ -1,6 +1,5 @@
 package com.syuk27.blog.domain.post.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.syuk27.blog.domain.post.model.Post;
 import com.syuk27.blog.domain.post.model.PostBlock;
 import com.syuk27.blog.domain.post.model.PostDto;
-import com.syuk27.blog.domain.post.model.PostDto.PostBlockDto;
 import com.syuk27.blog.domain.post.repository.PostBlockRepository;
 import com.syuk27.blog.domain.post.repository.PostRepository;
 

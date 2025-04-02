@@ -3,7 +3,6 @@ package com.syuk27.blog.security;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
