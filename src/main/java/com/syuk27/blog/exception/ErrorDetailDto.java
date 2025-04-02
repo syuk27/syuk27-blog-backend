@@ -1,4 +1,4 @@
-package com.syuk27.blog.exceptin;
+package com.syuk27.blog.exception;
 
 import java.time.LocalDateTime;
 

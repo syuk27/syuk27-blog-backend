@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.syuk27.blog.domain.post.model.Post;
 import com.syuk27.blog.domain.post.model.PostDto;
@@ -43,5 +45,20 @@ public class AdminPostController {
 	@GetMapping("/detail/{postId}")
 	public ResponseEntity<Optional<PostDto>> getPostByPostId(@PathVariable Long postId) {
 		return ResponseEntity.ok().body(postService.getPostById(postId));
+	}
+	
+	/** v2 */
+	@PostMapping("/v2/image")
+	public ResponseEntity<?> createPostV2(@RequestParam("files") MultipartFile[] files) {
+		
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	@PostMapping("/v2")
+	public ResponseEntity<PostDto> createPostV2(@RequestBody Post post) {
+		
+		
+		return ResponseEntity.ok().build();
 	}
 }
