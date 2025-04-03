@@ -48,7 +48,7 @@ public class AdminPostController {
 	}
 	
 	/** v2 */
-	@PostMapping("/v2/image")
+	@PostMapping("/v2/images")
 	public ResponseEntity<?> createPostV2(@RequestParam("files") MultipartFile[] files) {
 		
 		
