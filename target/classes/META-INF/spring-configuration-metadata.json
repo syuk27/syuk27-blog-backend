@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "file",
+      "type": "com.syuk27.blog.infrastructure.file.FileStorageProperties",
+      "sourceType": "com.syuk27.blog.infrastructure.file.FileStorageProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "file.upload-dir",
+      "type": "java.lang.String",
+      "sourceType": "com.syuk27.blog.infrastructure.file.FileStorageProperties"
+    }
+  ],
+  "hints": []
+}

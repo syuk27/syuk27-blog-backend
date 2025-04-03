@@ -24,7 +24,10 @@ public enum ErrorType {
 	USER_EX01(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."),
 	USER_EX02(HttpStatus.CONFLICT, "이미 사용중인 닉네임 입니다. 닉네임: {0}"),
 	USER_EX03(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다. 이메일: {0}"),
-	USER_EX04(HttpStatus.CONFLICT, "이미 사용중인 비밀번호 입니다.");
+	USER_EX04(HttpStatus.CONFLICT, "이미 사용중인 비밀번호 입니다."),
+	
+	FILE_EX01(HttpStatus.INTERNAL_SERVER_ERROR, "업로드 디렉토리 생성을 실패 했습니다."),
+	FILE_EX02(HttpStatus.INTERNAL_SERVER_ERROR, "파일 저장을 실패 했습니다.");
 
 	private final HttpStatus httpStatus;
 	
