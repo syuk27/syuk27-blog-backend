@@ -4,7 +4,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -35,21 +38,27 @@ public class FileStorageService {
 		}
 	}
 
-	public String storeImage(MultipartFile file, HttpServletRequest request) {
-		String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
-		try {
-
-			// 파일 저장
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
-			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-			// URL 생성
-			String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-			return baseUrl + "/" + fileName;
-
-		} catch (Exception e) {
-			throw new CustomException(ErrorType.FILE_EX02.getHttpStatus(), ErrorType.FILE_EX02.getMessage());
-		}
+	public List<String> storeImages(MultipartFile [] files, HttpServletRequest request) {
+		
+		List<String> imageUrls = new ArrayList<String>();
+		Optional.ofNullable(files).ifPresent(fileArray -> {
+			for(MultipartFile file : fileArray) {
+				
+				String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+				try {
+					// 파일 저장 (상대 경로) -> 운영 반영시 절대 경로로 변경 필요
+					Path targetLocation = this.fileStorageLocation.resolve(fileName);
+					Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+					
+					// URL 생성
+					String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+					imageUrls.add(baseUrl + "/" + fileName);
+				} catch (Exception e) {
+					throw new CustomException(ErrorType.FILE_EX02.getHttpStatus(), ErrorType.FILE_EX02.getMessage());
+				}
+			}
+		});
+		
+		return imageUrls;
 	}
 }

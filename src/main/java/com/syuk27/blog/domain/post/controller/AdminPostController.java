@@ -1,5 +1,6 @@
 package com.syuk27.blog.domain.post.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -18,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.syuk27.blog.domain.post.model.Post;
 import com.syuk27.blog.domain.post.model.PostDto;
 import com.syuk27.blog.domain.post.service.PostService;
+import com.syuk27.blog.infrastructure.file.FileStorageService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 
 
@@ -26,8 +30,11 @@ import com.syuk27.blog.domain.post.service.PostService;
 public class AdminPostController {
 	private final PostService postService;
 	
-	public AdminPostController(PostService postService) {
+	private final FileStorageService fileStorageService;
+	
+	public AdminPostController(PostService postService, FileStorageService fileStorageService) {
 		this.postService = postService;
+		this.fileStorageService = fileStorageService;
 	}
 	
 	@PostMapping("")
@@ -49,10 +56,10 @@ public class AdminPostController {
 	
 	/** v2 */
 	@PostMapping("/v2/images")
-	public ResponseEntity<?> createPostV2(@RequestParam("files") MultipartFile[] files) {
+	public ResponseEntity<?> createPostV2(@RequestParam("files") MultipartFile[] files, HttpServletRequest request) {
 		
-		
-		return ResponseEntity.ok().build();
+		List<String> imageUrls = fileStorageService.storeImages(files, request);
+		return ResponseEntity.ok().body(imageUrls);
 	}
 	
 	@PostMapping("/v2")

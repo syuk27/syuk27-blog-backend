@@ -2,6 +2,7 @@ package com.syuk27.blog.domain.user.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -68,7 +69,7 @@ public class User extends BaseEntity {
 	// @JsonIgnore //JSON 직렬화/역직렬화 시 필드가 제외되므로 API 요청 시 리스트가 자동으로 포함되지 않음
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonIgnore
-	private List<Post> postList;
+	private List<Post> postList = new ArrayList<Post>();
 
 	// 기본 생성자 추가 (Hibernate 필요)
 //	public User() {
