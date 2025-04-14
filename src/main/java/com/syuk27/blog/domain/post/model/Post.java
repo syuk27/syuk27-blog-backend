@@ -1,5 +1,6 @@
 package com.syuk27.blog.domain.post.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.syuk27.blog.domain.common.model.BaseEntity;
@@ -46,7 +47,7 @@ public class Post extends BaseEntity {
 	private Integer category_id;
 	
 	@OneToMany(mappedBy="post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostBlock> postBlockList;
+	private List<PostBlock> postBlockList = new ArrayList<PostBlock>();
 	
 	@ManyToOne(fetch = FetchType.LAZY) //참조하는 엔티티를 실제로 사용할 때 로딩 => 성능 최적화
 	@JoinColumn(name="user_id", nullable = false) // Foreign Key 설정 조인은 기본 id 찾아서 함
